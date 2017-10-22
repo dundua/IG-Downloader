@@ -55,17 +55,19 @@ def main():
     logging.info("Initialize IG interface.")
     ig = instagram.instagram(config)
     logging.info("Get story tray.")
+    traytime = int(time.time())
     storyresp = ig.getStories()
     storyjson = storyresp.json()
-    saveJSON(int(time.time()), "tray", storyjson)
+    saveJSON(traytime, "tray", storyjson)
 
     logging.info("Downloading story tray.")
     ig.downloadTray(storyjson)
     users = ig.getUserIDs(storyjson)
     for user in users:
+        reeltime = int(time.time())
         uresp = ig.getUserStories(user)
         ujson = uresp.json()
-        saveJSON(int(time.time()), "reel_" + str(user), ujson)
+        saveJSON(reeltime, "reel_" + str(user), ujson)
         ig.downloadReel(ujson)
 
     logging.info("Done.")
