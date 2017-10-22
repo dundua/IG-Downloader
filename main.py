@@ -4,6 +4,7 @@ import sys
 import time
 import os
 import instagram
+import tarfile
 
 def saveJSON(timestamp, type, content):
     dirpath = os.getcwd()
@@ -70,6 +71,23 @@ def main():
         saveJSON(reeltime, "reel_" + str(user), ujson)
         ig.downloadReel(ujson)
 
+    logging.info("Collecting list of JSON objects.")
+    jsonlist = []
+    for file in os.listdir("json"):
+        if file.endswith(".json"):
+            jsonlist.append(os.path.join("json", file))
+        
+    logging.info("Creating tar.xz file of JSON objects.")
+    path = os.path.join(os.getcwd(), "json", str(traytime) + ".tar.xz")
+    tar = tarfile.open(path, "x:xz")
+    for path in jsonlist:
+        tar.add(path)
+    tar.close()
+    
+    logging.info("Removing old JSON objects.")
+    for path in jsonlist:
+        os.remove(path)
+        
     logging.info("Done.")
     
 if __name__ == "__main__":
