@@ -3,25 +3,26 @@ import logging
 import os
 from datetime import datetime
 
+
 class instagram:
     def __init__(self, cookie):
         self.userid = cookie["ds_user_id"]
         self.sessionid = cookie["sessionid"]
         self.csrftoken = cookie["csrftoken"]
         self.headers = {
-            "accept" : "*/*",
-            "accept-encoding" : "gzip, deflate",
-            "accept-language" : "en-US",
-            "content_type" : "application/x-www-form-urlencoded; charset=UTF-8",
-            "cache-control" : "no-cache",
-            "cookie" : "ds_user_id=" + self.userid + "; sessionid=" + self.sessionid + "; csrftoken=" + self.csrftoken,
-            "dnt" : "1",
-            #"pragma" : "no-cache",
-            #"referer" : "https://www.instagram.com/",
-            "user-agent" : "Instagram 10.26.0 (iPhone7,2; iOS 10_1_1; en_US; en-US; scale=2.00; gamut=normal; 750x1334) AppleWebKit/420+",
-            "x-ig-capabilities" : "36oD",
-            #"x-ig-connection-type" : "WIFI",
-            #"x-ig-fb-http-engine" : "Liger"
+            "accept"           : "*/*",
+            "accept-encoding"  : "gzip, deflate",
+            "accept-language"  : "en-US",
+            "content_type"     : "application/x-www-form-urlencoded; charset=UTF-8",
+            "cache-control"    : "no-cache",
+            "cookie"           : "ds_user_id=" + self.userid + "; sessionid=" + self.sessionid + "; csrftoken=" + self.csrftoken,
+            "dnt"              : "1",
+            # "pragma" : "no-cache",
+            # "referer" : "https://www.instagram.com/",
+            "user-agent"       : "Instagram 10.26.0 (iPhone7,2; iOS 10_1_1; en_US; en-US; scale=2.00; gamut=normal; 750x1334) AppleWebKit/420+",
+            "x-ig-capabilities": "36oD",
+            # "x-ig-connection-type" : "WIFI",
+            # "x-ig-fb-http-engine" : "Liger"
         }
         self.session = requests.Session()
         self.session.headers = self.headers
@@ -40,14 +41,14 @@ class instagram:
         if response.status_code != requests.codes.ok:
             logging.error("Status Code Error." + str(response.status_code))
             response.raise_for_status()
-        return response                
+        return response
 
     def getStories(self):
         return self.getReelTray()
 
     def getUserStories(self, user):
         return self.getReelMedia(user)
-        
+
     def getUserIDs(self, json: dict) -> list:
         """Extract user IDs from reel tray JSON.
         
@@ -58,12 +59,12 @@ class instagram:
             List of user IDs
             
         """
-        
+
         users = []
         for user in json['tray']:
             users.append(user['user']['pk'])
         return users
-        
+
     def getFile(self, url: str, dest: str):
         """Download file and save to destination
         
@@ -75,7 +76,7 @@ class instagram:
             None
             
         """
-        
+
         logging.debug("URL: %s", url)
         logging.debug("Dest: %s", dest)
         try:
@@ -98,11 +99,10 @@ class instagram:
                 handle.close()
         except FileExistsError:
             logging.info("File already exists.")
-            
+
         if os.path.getsize(dest) == 0:
             logging.info("Error downloading. Removing.")
             os.remove(dest)
-            
 
     def formatPath(self, user: str, pk: int, timestamp: int, postid: str, mediatype: int):
         """Format download path to a specific format/template
@@ -118,7 +118,7 @@ class instagram:
             None
         
         """
-        
+
         dirpath = os.path.dirname(__file__)
         utcdatetime = datetime.utcfromtimestamp(timestamp).strftime("%Y-%m-%d-%H-%M-%S")
         if mediatype == 1:
@@ -129,7 +129,7 @@ class instagram:
             ext = ""
         path = os.path.join(dirpath, "downloads", user + "_" + str(pk), "stories", utcdatetime + "_" + str(timestamp) + "_" + postid + ext)
         return path
-    
+
     def downloadReel(self, resp):
         """Download stories of a followed user's tray.
         
@@ -143,42 +143,44 @@ class instagram:
         
         """
         try:
-            for index,item in enumerate(resp['items']):
+            for index, item in enumerate(resp['items']):
                 logging.debug('    ' + str(index))
                 username = item['user']['username']
                 userpk = item['user']['pk']
                 timestamp = item['taken_at']
                 postid = item['id']
                 mediatype = item['media_type']
-                if mediatype == 2: # Video
+                if mediatype == 2:  # Video
                     largest = 0
-                    for versionindex,video in enumerate(item['video_versions']):
-                        itemsize = video['width']*video['height']
-                        largestsize = item['video_versions'][largest]['width']*item['video_versions'][largest]['height']
+                    for versionindex, video in enumerate(item['video_versions']):
+                        itemsize = video['width'] * video['height']
+                        largestsize = item['video_versions'][largest]['width'] * \
+                                      item['video_versions'][largest]['height']
                         if itemsize > largestsize:
                             largest = versionindex
                     logging.debug('        V' + str(largest))
                     url = item['video_versions'][largest]['url']
                     logging.debug('            ' + url)
-                elif mediatype == 1: # Image
+                elif mediatype == 1:  # Image
                     largest = 0
-                    for versionindex,image in enumerate(item['image_versions2']['candidates']):
-                        itemsize = image['width']*image['height']
-                        largestsize = item['image_versions2']['candidates'][largest]['width']*item['image_versions2']['candidates'][largest]['height']
+                    for versionindex, image in enumerate(item['image_versions2']['candidates']):
+                        itemsize = image['width'] * image['height']
+                        largestsize = item['image_versions2']['candidates'][largest]['width'] * \
+                                      item['image_versions2']['candidates'][largest]['height']
                         if itemsize > largestsize:
                             largest = versionindex
                     logging.debug('        I' + str(largest))
                     url = item['image_versions2']['candidates'][largest]['url']
                     logging.debug('            ' + url)
-                else: # Unknown
+                else:  # Unknown
                     logging.debug('        E')
                     # Handle this condition gracefully
-                    
+
                 path = self.formatPath(username, userpk, timestamp, postid, mediatype)
                 self.getFile(url, path)
-        except KeyError: # JSON 'item' key does not exist for later items in tray as of 6/2/2017
+        except KeyError:  # JSON 'item' key does not exist for later items in tray as of 6/2/2017
             pass
-    
+
     def downloadTray(self, resp):
         """Download stories of logged in user's tray.
         
@@ -195,10 +197,10 @@ class instagram:
             None
         
         """
-        
+
         for reel in resp['tray']:
             self.downloadReel(reel)
-    
+
     def close(self):
         """Close seesion to IG
         
@@ -206,5 +208,5 @@ class instagram:
             None
         
         """
-            
+
         self.session.close()

@@ -6,6 +6,7 @@ import os
 import instagram
 import tarfile
 
+
 def saveJSON(timestamp, type, content):
     dirpath = os.getcwd()
     path = os.path.join(dirpath, "json", str(timestamp) + "_" + type + ".json")
@@ -14,6 +15,7 @@ def saveJSON(timestamp, type, content):
     f = open(path, "tx")
     json.dump(content, f)
     f.close()
+
 
 def main():
     configfile = "config.json"
@@ -40,15 +42,15 @@ def main():
         igsessionid = input("Enter your IG session ID: ")
         igcsrftoken = input("Enter your IG CSRF token: ")
         config = {
-            "ds_user_id" : iguserid,
+            "ds_user_id": iguserid,
             "sessionid" : igsessionid,
-            "csrftoken": igcsrftoken,
+            "csrftoken" : igcsrftoken,
         }
         logging.info("Saving config.")
-        json.dump(config, f) # Save config
-        
-    #logging.info("Config settings:")
-    #logging.info("%s", config) # Contains private data
+        json.dump(config, f)  # Save config
+
+    # logging.info("Config settings:")
+    # logging.info("%s", config) # Contains private data
     f.close()
 
     # Insert error checking to see if config is valid and works
@@ -76,19 +78,20 @@ def main():
     for file in os.listdir("json"):
         if file.endswith(".json"):
             jsonlist.append(os.path.join("json", file))
-        
+
     logging.info("Creating tar.xz file of JSON objects.")
     path = os.path.join(os.getcwd(), "json", str(traytime) + ".tar.xz")
     tar = tarfile.open(path, "x:xz")
     for path in jsonlist:
         tar.add(path)
     tar.close()
-    
+
     logging.info("Removing old JSON objects.")
     for path in jsonlist:
         os.remove(path)
-        
+
     logging.info("Done.")
-    
+
+
 if __name__ == "__main__":
     main()
