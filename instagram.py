@@ -6,6 +6,11 @@ from datetime import datetime
 
 class instagram:
     def __init__(self, cookie):
+        """This sets up this class to communicate with Instagram.
+
+        Args:
+            cookie: A dictionary object with the required cookie values (ds_user_id, sessionid, csrftoken).
+        """
         self.userid = cookie["ds_user_id"]
         self.sessionid = cookie["sessionid"]
         self.csrftoken = cookie["csrftoken"]
@@ -28,6 +33,11 @@ class instagram:
         self.session.headers = self.headers
 
     def getReelTray(self):
+        """Get reel tray from API.
+
+        Returns:
+            Response object with reel tray API response
+        """
         endpoint = "https://i.instagram.com/api/v1/feed/reels_tray/"
         response = self.session.get(endpoint, timeout=60)
         if response.status_code != requests.codes.ok:
@@ -36,6 +46,14 @@ class instagram:
         return response
 
     def getReelMedia(self, user):
+        """Get reel media of a user from API.
+
+        Args:
+            user: User ID
+
+        Returns:
+            Response object with reel media API response
+        """
         endpoint = "https://i.instagram.com/api/v1/feed/user/" + str(user) + "/reel_media/"
         response = self.session.get(endpoint, timeout=60)
         if response.status_code != requests.codes.ok:
@@ -59,7 +77,6 @@ class instagram:
             List of user IDs
             
         """
-
         users = []
         for user in json['tray']:
             users.append(user['user']['pk'])
@@ -76,7 +93,6 @@ class instagram:
             None
             
         """
-
         logging.debug("URL: %s", url)
         logging.debug("Dest: %s", dest)
         try:
@@ -118,7 +134,6 @@ class instagram:
             None
         
         """
-
         dirpath = os.path.dirname(__file__)
         utcdatetime = datetime.utcfromtimestamp(timestamp).strftime("%Y-%m-%d-%H-%M-%S")
         if mediatype == 1:
@@ -198,7 +213,6 @@ class instagram:
             None
         
         """
-
         for reel in resp['tray']:
             self.downloadReel(reel)
 
@@ -209,5 +223,4 @@ class instagram:
             None
         
         """
-
         self.session.close()

@@ -7,7 +7,18 @@ import instagram
 import tarfile
 
 
-def saveJSON(timestamp, type, content):
+def saveJSON(timestamp: int, type: str, content: dict):
+    """Save JSON file
+
+    Args:
+        timestamp: Unix timestamp
+        type: Name
+        content: JSON data
+
+    Returns:
+        None
+
+    """
     dirpath = os.getcwd()
     path = os.path.join(dirpath, "json", str(timestamp) + "_" + type + ".json")
     dirpath = os.path.dirname(path)
@@ -18,6 +29,11 @@ def saveJSON(timestamp, type, content):
 
 
 def main():
+    """ Main function
+
+    Returns:
+        None
+    """
     configfile = "config.json"
     logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 
