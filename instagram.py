@@ -104,7 +104,7 @@ class instagram:
             logging.info("Error downloading. Removing.")
             os.remove(dest)
 
-    def formatPath(self, user: str, pk: int, timestamp: int, postid: str, mediatype: int):
+    def formatPath(self, user: str, pk: int, timestamp: int, postid: str, mediatype: int) -> str:
         """Format download path to a specific format/template
         
         Args:
