@@ -174,7 +174,8 @@ class instagram:
                     logging.debug('            ' + url)
                 else:  # Unknown
                     logging.debug('        E')
-                    # Handle this condition gracefully
+                    url = None
+                    pass
 
                 path = self.formatPath(username, userpk, timestamp, postid, mediatype)
                 self.getFile(url, path)
