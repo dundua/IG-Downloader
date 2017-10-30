@@ -17,7 +17,6 @@ def saveJSON(timestamp: int, type: str, content: dict):
 
     Returns:
         None
-
     """
     dirpath = os.getcwd()
     path = os.path.join(dirpath, "json", str(timestamp) + "_" + type + ".json")

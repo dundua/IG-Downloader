@@ -75,7 +75,6 @@ class instagram:
             
         Returns:
             List of user IDs
-            
         """
         users = []
         for user in json['tray']:
@@ -91,7 +90,6 @@ class instagram:
             
         Returns:
             None
-            
         """
         logging.debug("URL: %s", url)
         logging.debug("Dest: %s", dest)
@@ -132,7 +130,6 @@ class instagram:
         
         Returns:
             None
-        
         """
         dirpath = os.path.dirname(__file__)
         utcdatetime = datetime.utcfromtimestamp(timestamp).strftime("%Y-%m-%d-%H-%M-%S")
@@ -155,7 +152,6 @@ class instagram:
             
         Returns:
             None
-        
         """
         try:
             for index, item in enumerate(resp['items']):
@@ -211,7 +207,6 @@ class instagram:
             
         Returns:
             None
-        
         """
         for reel in resp['tray']:
             self.downloadReel(reel)
@@ -221,6 +216,5 @@ class instagram:
         
         Returns:
             None
-        
         """
         self.session.close()
