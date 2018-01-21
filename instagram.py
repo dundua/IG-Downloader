@@ -14,13 +14,14 @@ class instagram:
         self.userid = cookie["ds_user_id"]
         self.sessionid = cookie["sessionid"]
         self.csrftoken = cookie["csrftoken"]
+        self.mid = cookie["mid"]
         self.headers = {
             "accept"           : "*/*",
             "accept-encoding"  : "gzip, deflate",
             "accept-language"  : "en-US",
             "content_type"     : "application/x-www-form-urlencoded; charset=UTF-8",
             "cache-control"    : "no-cache",
-            "cookie"           : "ds_user_id=" + self.userid + "; sessionid=" + self.sessionid + "; csrftoken=" + self.csrftoken,
+            "cookie"           : "ds_user_id=" + self.userid + "; sessionid=" + self.sessionid + "; csrftoken=" + self.csrftoken + "; mid=" + self.mid,
             "dnt"              : "1",
             # "pragma" : "no-cache",
             # "referer" : "https://www.instagram.com/",

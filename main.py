@@ -56,10 +56,12 @@ def main():
         iguserid = input("Enter your IG user ID: ")
         igsessionid = input("Enter your IG session ID: ")
         igcsrftoken = input("Enter your IG CSRF token: ")
+        igmid = input("Enter your IG mid: ")
         config = {
             "ds_user_id": iguserid,
             "sessionid" : igsessionid,
             "csrftoken" : igcsrftoken,
+            "mid" : igmid,
         }
         logging.info("Saving config.")
         json.dump(config, f)  # Save config
