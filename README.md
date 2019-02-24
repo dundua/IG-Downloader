@@ -8,6 +8,8 @@ This script will download stories of followed users posted in the past 24 hours.
 
 On first run, a config file will be generated. The script will ask for some web browser cookie values of a currently logged in user, which can be obtained from the developer tools of Google Chrome or Firefox.
 
+Note that the cookies may need to be periodically refreshed at least every 3 months or else this script may not be able to sucessfully authenticate. 
+
 To periodically obtain stories from followed users, run this script at least every 24 hours. A Windows Scheduled Task or a Unix cron job is recommended to perform this automatically.
 
 # Special Thanks
