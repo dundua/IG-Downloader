@@ -90,6 +90,9 @@ def main():
         saveJSON(reeltime, "reel_" + str(user), ujson)
         ig.downloadReel(ujson)
 
+    logging.info("Downloading post-live stories.")
+    ig.downloadStoryLive(storyjson)
+
     logging.info("Collecting list of JSON objects.")
     jsonlist = []
     for file in os.listdir("json"):

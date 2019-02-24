@@ -212,6 +212,39 @@ class instagram:
         for reel in resp['tray']:
             self.downloadReel(reel)
 
+    def downloadStoryLive(self, resp):
+        """Download post-live stories of a followed user's tray.
+
+        Download the post-live stories of a followed user.
+
+        Args:
+            resp: JSON dictionary of reel from IG API
+
+        Returns:
+            None
+        """
+        try:
+            for index,item in enumerate(resp["post_live"]["post_live_items"]):
+                logging.debug('    ' + str(index))
+                username = item["user"]["username"]
+                userpk = item["user"]["pk"]
+                for bindex,broadcast in enumerate(item["broadcasts"]):
+                    logging.debug('        ' + str(bindex))
+                    timestamp = broadcast["published_time"]
+                    postid = broadcast["media_id"]
+                    dash = broadcast["dash_manifest"]
+                    dashxml = xml.parseString(dash)
+                    elements = dashxml.getElementsByTagName("BaseURL")
+                    for eindex,element in enumerate(elements):
+                        for node in element.childNodes:
+                            if node.nodeType == node.TEXT_NODE:
+                                url = node.data
+                                mediatype = 3
+                                path = self.formatPath(username, userpk, timestamp, postid + "_" + str(eindex), mediatype)
+                                self.getFile(url, path)
+        except KeyError: # No "post_live" key
+            logging.debug('    ' + 'No live stories.')
+
     def close(self):
         """Close seesion to IG
         
