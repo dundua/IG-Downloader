@@ -6,7 +6,6 @@ import os
 import instagram
 import tarfile
 
-
 def saveJSON(timestamp: int, type: str, content: dict):
     """Save JSON file
 
@@ -25,7 +24,6 @@ def saveJSON(timestamp: int, type: str, content: dict):
     f = open(path, "tx")
     json.dump(content, f)
     f.close()
-
 
 def main():
     """ Main function
@@ -64,10 +62,10 @@ def main():
             "mid" : igmid,
         }
         logging.info("Saving config.")
-        json.dump(config, f)  # Save config
+        json.dump(config, f) # Save config
 
-    # logging.info("Config settings:")
-    # logging.info("%s", config) # Contains private data
+    #logging.info("Config settings:")
+    #logging.info("%s", config) # Contains private data
     f.close()
 
     # Insert error checking to see if config is valid and works
@@ -111,7 +109,6 @@ def main():
         os.remove(path)
 
     logging.info("Done.")
-
 
 if __name__ == "__main__":
     main()
