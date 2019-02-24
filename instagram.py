@@ -1,4 +1,6 @@
 import requests
+from requests.adapters import HTTPAdapter
+from requests.packages.urllib3.util.retry import Retry
 import logging
 import os
 from datetime import datetime
@@ -34,6 +36,13 @@ class instagram:
             # "x-ig-fb-http-engine" : "Liger"
         }
         self.session = requests.Session()
+        max_tries = 3
+        backoff_factor = 0.2
+        status_forcelist = (500, 502, 503, 504)
+        retry = Retry(total=max_tries, read=max_tries, connect=max_tries, backoff_factor=backoff_factor, status_forcelist=status_forcelist)
+        adapter = HTTPAdapter(max_retries=retry)
+        self.session.mount('http://', adapter)
+        self.session.mount('https://', adapter)
         self.session.headers = self.headers
 
     def getReelTray(self):
