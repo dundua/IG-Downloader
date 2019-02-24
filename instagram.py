@@ -2,7 +2,10 @@ import requests
 import logging
 import os
 from datetime import datetime
-
+try:
+    import defusedxml.minidom as xml
+except ImportError:
+    import xml.dom.minidom as xml
 
 class instagram:
     def __init__(self, cookie):
