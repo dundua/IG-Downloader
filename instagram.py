@@ -82,10 +82,10 @@ class instagram:
 
     def getUserIDs(self, json: dict) -> list:
         """Extract user IDs from reel tray JSON.
-        
+
         Args:
             json: Reel tray response from IG
-            
+
         Returns:
             List of user IDs
         """
@@ -96,11 +96,11 @@ class instagram:
 
     def getFile(self, url: str, dest: str):
         """Download file and save to destination
-        
+
         Args:
             url: URL of item to download
             dest: File system destination to save item to
-            
+
         Returns:
             None
         """
@@ -133,14 +133,14 @@ class instagram:
 
     def formatPath(self, user: str, pk: int, timestamp: int, postid: str, mediatype: int) -> str:
         """Format download path to a specific format/template
-        
+
         Args:
             user: User name
             pk: User ID
             timestamp: UTC Unix timestamp
             postid: Post ID
             mediatype: Media type as defined by IG
-        
+
         Returns:
             None
         """
@@ -157,12 +157,12 @@ class instagram:
 
     def downloadReel(self, resp):
         """Download stories of a followed user's tray.
-        
+
         Download the stories of a followed user.
-        
+
         Args:
             resp: JSON dictionary of reel from IG API
-            
+
         Returns:
             None
         """
@@ -174,7 +174,7 @@ class instagram:
                 timestamp = item['taken_at']
                 postid = item['id']
                 mediatype = item['media_type']
-                if mediatype == 2:  # Video
+                if mediatype == 2: # Video
                     largest = 0
                     for versionindex, video in enumerate(item['video_versions']):
                         itemsize = video['width'] * video['height']
@@ -185,7 +185,7 @@ class instagram:
                     logging.debug('        V' + str(largest))
                     url = item['video_versions'][largest]['url']
                     logging.debug('            ' + url)
-                elif mediatype == 1:  # Image
+                elif mediatype == 1: # Image
                     largest = 0
                     for versionindex, image in enumerate(item['image_versions2']['candidates']):
                         itemsize = image['width'] * image['height']
@@ -196,28 +196,28 @@ class instagram:
                     logging.debug('        I' + str(largest))
                     url = item['image_versions2']['candidates'][largest]['url']
                     logging.debug('            ' + url)
-                else:  # Unknown
+                else: # Unknown
                     logging.debug('        E')
                     url = None
                     pass
 
                 path = self.formatPath(username, userpk, timestamp, postid, mediatype)
                 self.getFile(url, path)
-        except KeyError:  # JSON 'item' key does not exist for later items in tray as of 6/2/2017
+        except KeyError: # JSON 'item' key does not exist for later items in tray as of 6/2/2017
             pass
 
     def downloadTray(self, resp):
         """Download stories of logged in user's tray.
-        
+
         Download the stories as available in the tray. The tray contains a list of
         reels, a collection of the stories posted by a followed user.
-        
+
         The tray only contains a small set of reels of the first few users. To download
         the rest, a reel must be obtained for each user in the tray.
-        
+
         Args:
             resp: JSON dictionary of tray from IG API
-            
+
         Returns:
             None
         """
@@ -259,7 +259,7 @@ class instagram:
 
     def close(self):
         """Close seesion to IG
-        
+
         Returns:
             None
         """
