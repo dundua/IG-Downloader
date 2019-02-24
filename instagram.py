@@ -148,11 +148,17 @@ class instagram:
         utcdatetime = datetime.utcfromtimestamp(timestamp).strftime("%Y-%m-%d-%H-%M-%S")
         if mediatype == 1:
             ext = ".jpg"
+            type = "stories"
         elif mediatype == 2:
             ext = ".mp4"
+            type = "stories"
+        elif mediatype == 3:
+            ext = ".mp4"
+            type = "livestories"
         else:
             ext = ""
-        path = os.path.join(dirpath, "downloads", user + "_" + str(pk), "stories", utcdatetime + "_" + str(timestamp) + "_" + postid + ext)
+            type = "other"
+        path = os.path.join(dirpath, "downloads", user + "_" + str(pk), type, utcdatetime + "_" + str(timestamp) + "_" + postid + ext)
         return path
 
     def downloadReel(self, resp):
